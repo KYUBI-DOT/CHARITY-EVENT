@@ -1,0 +1,55 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Search Charity Events</title>
+  <link rel="stylesheet" href="styles.css"/>
+</head>
+<body>
+  <header class="header">
+    <nav class="nav">
+      <div><strong>City Hearts</strong></div>
+      <div>
+        <a href="index.html">Home</a>
+        <a href="search.html">Search Events</a>
+      </div>
+    </nav>
+  </header>
+
+  <main class="container">
+    <h1>Find an Event</h1>
+    <form id="searchForm" class="card" onsubmit="return false;">
+      <div class="row">
+        <div>
+          <label>Date</label>
+          <input type="date" id="date" class="input"/>
+        </div>
+        <div>
+          <label>Location</label>
+          <input type="text" id="location" class="input" placeholder="e.g., Perth"/>
+        </div>
+      </div>
+      <div class="row" style="margin-top:12px">
+        <div>
+          <label>Category</label>
+          <select id="category" class="input">
+            <option value="">Any</option>
+          </select>
+        </div>
+        <div style="display:flex;gap:8px;align-items:end;justify-content:flex-end">
+          <button id="clearBtn" class="btn secondary" type="button">Clear Filters</button>
+          <button id="searchBtn" class="btn" type="submit">Search</button>
+        </div>
+      </div>
+    </form>
+    <div id="error" class="alert" style="display:none;"></div>
+    <div id="results" class="grid" style="margin-top:16px"></div>
+  </main>
+
+  <footer class="footer container">© City Hearts Foundation</footer>
+
+  <script src="js/api.js"></script>
+  <script src="js/search.js"></script>
+</body>
+</html>
