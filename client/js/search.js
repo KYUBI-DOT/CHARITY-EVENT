@@ -49,7 +49,11 @@ async function doSearch(){
   }
 }
 
-document.getElementById('searchForm').addEventListener('submit', doSearch);
+document.getElementById('searchForm').addEventListener('submit', (e) => {
+  e.preventDefault();      
+  doSearch();
+});
+
 document.getElementById('clearBtn').addEventListener('click', () => {
   document.getElementById('date').value='';
   document.getElementById('location').value='';

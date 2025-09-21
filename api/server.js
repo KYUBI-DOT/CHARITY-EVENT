@@ -13,6 +13,11 @@ const app = express();
 // --- middleware
 app.use(cors());
 app.use(express.json());
+const helmet = require('helmet');
+const compression = require('compression');
+app.use(helmet());
+app.use(compression());
+
 app.use(morgan('dev'));
 
 // --- serve the client (../client)
