@@ -22,12 +22,15 @@ app.use(morgan('dev'));
 
 // --- serve the client (../client)
 const clientDir = path.join(__dirname, '..', 'client');
-app.use(express.static(clientDir));
+app.use(express.static(clientDir))
 
 // optional: make "/" load the client home page
 app.get('/', (req, res) => {
   res.sendFile(path.join(clientDir, 'index.html'));
 });
+;
+
+
 
 // --- helpers
 const mapEvent = r => ({
@@ -115,16 +118,43 @@ app.get('/api/events/:id', async (req, res) => {
   }
 });
 
-// --- search (date, location, category) — active only
+// --- search (date, location, category, name) — active only
+// --- search (date, location, category, name/q) — active only
 app.get('/api/search', async (req, res) => {
   try {
-    const { date, location, category } = req.query;
+    // accept both ?name= and ?q=
+    let { date, location, category, name, q } = req.query;
+    if (!name && q) name = q;
+
     const cond = [`e.status = 'active'`];
     const params = [];
 
-    if (date)      { cond.push('DATE(e.start_datetime) = ?'); params.push(date); }
-    if (location)  { cond.push('e.location LIKE ?');          params.push(`%${location}%`); }
-    if (category)  { cond.push('e.category_id = ?');          params.push(category); }
+    // DATE: exact day (you can swap for month/range later)
+    if (date && /^\d{4}-\d{2}-\d{2}$/.test(date.trim())) {
+      cond.push('DATE(e.start_datetime) = ?');
+      params.push(date.trim());
+    }
+
+    if (location && location.trim()) {
+      cond.push('e.location LIKE ?');
+      params.push(`%${location.trim()}%`);
+    }
+
+    // NAME: only if length >= 2 to avoid matching everything
+    if (name && name.trim().length >= 2) {
+      const needle = name.trim().toLowerCase();
+      cond.push('LOWER(e.name) LIKE ?');
+      params.push(`%${needle}%`);
+    }
+
+    if (category && String(category).trim()) {
+      cond.push('e.category_id = ?');
+      params.push(category);
+    }
+
+    // Dev aid: see what the server actually received/applied
+    console.log('SEARCH req.query:', req.query);
+    console.log('SEARCH where:', cond.join(' AND '), 'params:', params);
 
     const [rows] = await pool.query(`
       SELECT e.*, c.name AS category_name
@@ -136,7 +166,20 @@ app.get('/api/search', async (req, res) => {
 
     const now = new Date();
     const out = rows.map(r => {
-      const d = mapEvent(r);
+      const d = {
+        event_id: r.event_id,
+        name: r.name,
+        summary: r.summary,
+        description: r.description,
+        location: r.location,
+        start_datetime: r.start_datetime,
+        end_datetime: r.end_datetime,
+        ticket_price: Number(r.ticket_price),
+        goal_amount: Number(r.goal_amount),
+        progress_amount: Number(r.progress_amount),
+        status: r.status,
+        category: r.category_name || null
+      };
       d.time_status = new Date(r.end_datetime) < now ? 'past' : 'upcoming';
       return d;
     });
@@ -147,6 +190,9 @@ app.get('/api/search', async (req, res) => {
     res.status(500).json({ error: 'Search failed', detail: err.message });
   }
 });
+
+  
+
 
 // --- start
 const PORT = process.env.PORT || 4000;

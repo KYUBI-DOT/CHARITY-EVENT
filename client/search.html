@@ -19,30 +19,38 @@
 
   <main class="container">
     <h1>Find an Event</h1>
-    <form id="searchForm" class="card" 
+
+    <form id="searchForm" class="card">
       <div class="row">
+        <div>
+          <label>Event Name</label>
+          <input type="text" id="name" class="input" placeholder="e.g., Gala, Concert, Run"/>
+        </div>
         <div>
           <label>Date</label>
           <input type="date" id="date" class="input"/>
         </div>
+      </div>
+
+      <div class="row" style="margin-top:12px">
         <div>
           <label>Location</label>
           <input type="text" id="location" class="input" placeholder="e.g., Perth"/>
         </div>
-      </div>
-      <div class="row" style="margin-top:12px">
         <div>
           <label>Category</label>
           <select id="category" class="input">
             <option value="">Any</option>
           </select>
         </div>
-        <div style="display:flex;gap:8px;align-items:end;justify-content:flex-end">
-          <button id="clearBtn" class="btn secondary" type="button">Clear Filters</button>
-          <button id="searchBtn" class="btn" type="submit">Search</button>
-        </div>
+      </div>
+
+      <div style="display:flex;gap:8px;align-items:center;justify-content:flex-end;margin-top:12px">
+        <button id="clearBtn" class="btn secondary" type="button">Clear Filters</button>
+        <button id="searchBtn" class="btn" type="submit">Search</button>
       </div>
     </form>
+
     <div id="error" class="alert" style="display:none;"></div>
     <div id="results" class="grid" style="margin-top:16px"></div>
   </main>
