@@ -18,8 +18,30 @@
   </header>
 
   <main class="container">
-    <div id="eventContainer"></div>
-    <div id="eventError" class="alert" style="display:none;"></div>
+    <h1 id="eventName">Event Title</h1>
+    <div id="eventMeta" class="muted"></div>
+
+    <section class="card" style="margin-top:16px">
+      <p id="eventDesc"></p>
+      <div style="margin-top:12px">
+        <strong>Location:</strong> <span id="eventLoc"></span><br/>
+        <strong>Date & Time:</strong> <span id="eventDate"></span><br/>
+        <strong>Category:</strong> <span id="eventCat"></span><br/>
+        <strong>Ticket Price:</strong> $<span id="eventPrice"></span>
+      </div>
+
+      <div style="margin-top:16px">
+        <strong>Goal:</strong> $<span id="eventGoal"></span><br/>
+        <strong>Raised:</strong> $<span id="eventProg"></span>
+        <div class="progress">
+          <div id="progressBar" class="progress-bar"></div>
+        </div>
+      </div>
+
+      <button id="registerBtn" class="btn" style="margin-top:16px">Register</button>
+    </section>
+
+    <div id="eventError" class="alert" style="display:none;margin-top:16px"></div>
   </main>
 
   <footer class="footer container">© City Hearts Foundation</footer>
